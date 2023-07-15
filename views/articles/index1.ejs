@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .bg-greyish {
+            background-color: #c9c9c9;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: white !important;
+        }
+        .card-body {
+            padding: 1.5rem;
+            background-color: #ffffff;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .card-subtitle {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+        .card-text {
+            margin-bottom: 0.75rem;
+        }
+        .text-muted {
+            font-size: 0.875rem;
+        }
+        .d-flex.justify-content-center {
+            justify-content: center;
+        }
+        #about-section h2,
+        #contact-section h2 {
+            text-align: center;
+        }
+        .content {
+            flex: 1;
+        }
+        .footer {
+            position: relative;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #ac3b61;
+            color: #FFFFFF;
+            padding: 20px;
+            text-align: center;
+        }
+        .search-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        .search-input {
+            width: 300px;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border-radius: 25px;
+            margin-right: 0.5rem;
+        }
+        .search-button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 25px;
+        }
+        .add-experience-button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 25px;
+            background-color: #28a745;
+            color: #FFFFFF;
+            border: none;
+        }
+        .show-all-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .no-results {
+            text-align: center;
+            margin-top: 2rem;
+            font-weight: bold;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+</head>
+<body>
+    <%- include('../partials/navbar1') %>
+    
+    <div class="container mt-4">
+        <h1 class="mb-4">Interview Experiences</h1>
+
+        <div class="search-form">
+            <input type="text" class="form-control search-input" id="company-search" placeholder="Search by company name">
+            <button class="btn btn-primary btn-l search-button" onclick="searchExperiences()">Search</button>
+        </div>
+
+        <div class="show-all-button">
+            <button class="btn btn-primary" onclick="showAllExperiences()">Show All Experiences</button>
+        </div>
+        
+        <div class="d-flex justify-content-center m-4">
+            <a href="/articles/new" class="btn btn-success btn-lg add-experience-button">Add Your Experience</a>
+        </div>
+
+        <div id="experience-list">
+            <% if (articles.length > 0) { %>
+                <% articles.forEach(article => { %>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= article.company_name %></h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Job Role: <%= article.job_role %></h6>
+                            <p class="card-text">
+                                <strong>Interview Experience: <%= article.candidate_name %></strong>
+                            </p>
+                            <p class="card-text">
+                                <strong>Preparation Strategies:</strong>
+                                <%= article.strategy %>
+                            </p>
+                            <p class="card-text">
+                                <strong>Journey:</strong>
+                                <%= article.journey %>
+                            </p>
+                            <p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="no-results">No results found</p>
+            <% } %>
+        </div>
+    </div>
+    
+    <%- include('../partials/footer') %>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let allArticles = [];
+
+       
+
+        <% articles.forEach(article => { %>
+                    
+            allArticles.push({
+                company: '<%= article.company_name.toLowerCase() %>',
+                html: '<div class="card mb-4"><div class="card-body"><h5 class="card-title"><%= article.company_name %></h5><h6 class="card-subtitle mb-2 text-muted">Job Role: <%= article.job_role %></h6><p class="card-text"><strong>Interview Experience: <%= article.candidate_name %></strong></p><p class="card-text"><strong>Preparation Strategies:</strong><%= article.strategy %></p><p class="card-text"><strong>Journey:</strong><%= article.journey %></p><p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p></div></div>'
+            });
+
+
+
+                <% }) %>
+
+
+
+
+
+        function searchExperiences() {
+            const searchInput = document.getElementById('company-search').value.toLowerCase();
+            const experienceList = document.getElementById('experience-list');
+            let results = 0;
+            let html = '';
+
+            for (let i = 0; i < allArticles.length; i++) {
+                const company = allArticles[i].company;
+                if (company.includes(searchInput)) {
+                    html += allArticles[i].html;
+                    results++;
+                }
+            }
+
+            if (results > 0) {
+                experienceList.innerHTML = html;
+            } else {
+                experienceList.innerHTML = '<p class="no-results">No results found</p>';
+            }
+        }
+
+        function showAllExperiences() {
+            const experienceList = document.getElementById('experience-list');
+            let html = '';
+
+            allArticles.forEach(article => {
+                html += article.html;
+            });
+
+            if (html !== '') {
+                experienceList.innerHTML = html;
+            } else {
+                experienceList.innerHTML = '<p class="no-results">No article found</p>';
+            }
+        }
+    </script>
+</body>
+</html>

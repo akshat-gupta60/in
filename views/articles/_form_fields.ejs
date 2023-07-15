@@ -1,0 +1,36 @@
+<div class="form-group">
+    <label for="company_name">Company Name</label>
+    <input  required type="text" value="<%= article.company_name %>" name="company_name" id="title" class="form-control mb-3">
+
+</div>
+<div class="form-group">
+    <label for="job_role">Job Role</label>
+    <input  required type="text" value="<%= article.job_role %>" name="job_role" id="job_role" class="form-control mb-3">
+
+</div>
+<div class="form-group">
+    <label for="candidate_name">Name of candidate</label>
+    <input  required type="text" value="<%= article.candidate_name %>" name="candidate_name" id="candidate_name" class="form-control mb-3">
+
+</div>
+<div class="form-group">
+    <label for="email">Your Email</label>
+    <input  required type="email" value="<%= article.email %>" name="email" id="email" class="form-control mb-3">
+
+</div>
+
+<div class="form-group">
+    <label for="strategy">Preparation Strategies</label>
+    
+    <textarea  required name="strategy" id="strategy" class="form-control mb-3" ><%= article.strategy %></textarea>
+
+    
+</div>
+<div class="form-group">
+    <label for="journey"> Describe your journey</label>
+    <textarea name="journey" id="journey" class="form-control mb-3" required><%= article.journey %></textarea>
+    
+</div>
+
+
+<button type="submit" class="btn btn-primary m-2">Save</button>
