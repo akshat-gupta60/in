@@ -51,37 +51,6 @@
             padding: 20px;
             text-align: center;
         }
-        .search-form {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-        .search-input {
-            width: 300px;
-            padding: 0.5rem;
-            font-size: 1rem;
-            border-radius: 25px;
-            margin-right: 0.5rem;
-        }
-        .search-button {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            border-radius: 25px;
-        }
-        .add-experience-button {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            border-radius: 25px;
-            background-color: #28a745;
-            color: #FFFFFF;
-            border: none;
-        }
-        .show-all-button {
-            display: flex;
-            justify-content: center;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-        }
         .no-results {
             text-align: center;
             margin-top: 2rem;
@@ -92,27 +61,24 @@
             font-family: 'Roboto', sans-serif;
             font-size: 1rem;
             margin: 0;
+        }
+
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+    <title>Search Results</title>
 </head>
 <body>
     <%- include('../partials/navbar1') %>
     
+    
+    
+    <div class="container">
+               <button class="btn btn-primary mb-4 mt-4" onclick="goBack()">Back</button>
+    </div>
+
     <div class="container mt-4">
-        <h1 class="mb-4">Interview Experiences</h1>
-
-        <div class="search-form">
-            <input type="text" class="form-control search-input" id="company-search" placeholder="Search by company name">
-            <button class="btn btn-primary btn-l search-button" onclick="searchExperiences()">Search</button>
-        </div>
-
-       
-        
-        <div class="d-flex justify-content-center m-4">
-            <a href="/articles/new" class="btn btn-success btn-lg add-experience-button">Add Your Experience</a>
-        </div>
+        <h1 class="mb-4">Search Results</h1>
 
         <div id="experience-list">
             <% if (articles.length > 0) { %>
@@ -130,7 +96,6 @@
                             </p>
                             <p class="card-text">
                                 <strong>Journey:</strong>
-                                
                                 <div class="journey-content-container"><%= article.journey %></div>
                             </p>
                             <p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p>
@@ -144,18 +109,12 @@
     </div>
     
     <%- include('../partials/footer') %>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
     <script>
-       
-
-
-
- function searchExperiences() {
-    const searchInput = document.getElementById('company-search').value.toLowerCase();
-    window.location.href = '/login/search?query=' + encodeURIComponent(searchInput);
-}
-
-       
+        function goBack() {
+            window.history.back();
+        }
     </script>
 </body>
 </html>

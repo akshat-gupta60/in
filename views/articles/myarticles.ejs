@@ -55,6 +55,12 @@
             padding: 20px;
             text-align: center;
         }
+        .journey-content-container{
+            white-space: pre-wrap;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            margin: 0;
+        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,11 +85,11 @@
                         </p>
                         <p class="card-text">
                             <strong>Preparation Strategies:</strong>
-                            <%= article.strategy %>
+                            <div class="journey-content-container"><%= article.journey %></div>
                         </p>
                         <p class="card-text">
                             <strong>Journey:</strong>
-                            <%= article.journey %>
+                            <div class="journey-content-container"><%= article.journey %></div>
                         </p>
                         <p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p>
                         <div class="row">

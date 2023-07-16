@@ -238,6 +238,35 @@ app.get('/articles/edit/:id', authenticateUser, async (req, res) => {
   }
 });
 
+
+// Handle search request
+app.get('/login/search', (req, res) => {
+  const searchQuery = req.query.query;
+
+  // Fetch articles from the database based on the search query
+  Article.find({ company_name: { $regex: searchQuery, $options: 'i' } })
+      .then(articles => {
+          res.render('articles/search', { articles });
+      })
+      .catch(error => {
+          console.log('Error:', error);
+          res.status(500).json({ error: 'An error occurred while fetching the search results' });
+      });
+});
+
+app.get('/search', (req, res) => {
+  const searchQuery = req.query.query;
+
+  // Fetch articles from the database based on the search query
+  Article.find({ company_name: { $regex: searchQuery, $options: 'i' } })
+      .then(articles => {
+          res.render('articles/search', { articles });
+      })
+      .catch(error => {
+          console.log('Error:', error);
+          res.status(500).json({ error: 'An error occurred while fetching the search results' });
+      });
+});
 app.use('/articles',articleRouter);
 app.listen(PORT,()=>{
     console.log(`listening to the port ${PORT}`);

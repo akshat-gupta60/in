@@ -85,11 +85,6 @@
             font-family: 'Roboto', sans-serif;
             font-size: 1rem;
             margin: 0;
-        }.tips-content-container{
-            white-space: pre-wrap;
-            font-family: 'Roboto', sans-serif;
-            font-size: 1rem;
-            margin: 0;
         }
 
 
@@ -109,9 +104,7 @@
             <button class="btn btn-primary search-button" onclick="searchExperiences()">Search</button>
         </div>
 
-        <div class="show-all-button">
-            <button class="btn btn-primary" onclick="showAllExperiences()">Show All Experiences</button>
-        </div>
+       
 
         <div id="experience-list">
             <% if (article.length > 0) { %>
@@ -125,7 +118,7 @@
                             </p>
                             <p class="card-text">
                                 <strong>Preparation Strategies:</strong>
-                                <div class="journey-content-container"><%= article.strategy %></div>
+                               <div class="journey-content-container"><%= article.journey %></div>
                             </p>
                             <p class="card-text">
                                 <strong>Journey:</strong>
@@ -144,67 +137,12 @@
     <%- include('../partials/footer') %>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        let allArticles = [];
+        
+ function searchExperiences() {
+    const searchInput = document.getElementById('company-search').value.toLowerCase();
+    window.location.href = '/search?query=' + encodeURIComponent(searchInput);
+}
 
-        // <% article.forEach(article => { %>
-        //     allArticles.push({
-        //         company: '<%= article.company_name.toLowerCase() %>',
-        //         html: '<div class="card mb-4"><div class="card-body"><h5 class="card-title"><%= article.company_name %></h5><h6 class="card-subtitle mb-2 text-muted">Job Role: <%= article.job_role %></h6><p class="card-text"><strong>Interview Experience: <%= article.candidate_name %></strong></p><p class="card-text"><strong>Preparation Strategies:</strong><%= article.strategy %></p><p class="card-text"><strong>Journey:</strong><%= article.journey %></p><p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p></div></div>'
-        //     });
-
-            
-        // <% }) %>
-
-        <% article.forEach(article => { %>
-                    
-            allArticles.push({
-                company: '<%= article.company_name.toLowerCase() %>',
-                html: '<div class="card mb-4"><div class="card-body"><h5 class="card-title"><%= article.company_name %></h5><h6 class="card-subtitle mb-2 text-muted">Job Role: <%= article.job_role %></h6><p class="card-text"><strong>Interview Experience: <%= article.candidate_name %></strong></p><p class="card-text"><strong>Preparation Strategies:</strong><%= article.strategy %></p><p class="card-text"><strong>Journey:</strong><%= article.journey %></p><p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p></div></div>'
-            });
-
-
-
-                <% }) %>
-
-
-
-
-
-        function searchExperiences() {
-            const searchInput = document.getElementById('company-search').value.toLowerCase();
-            const experienceList = document.getElementById('experience-list');
-            let results = 0;
-            let html = '';
-
-            for (let i = 0; i < allArticles.length; i++) {
-                const company = allArticles[i].company;
-                if (company.includes(searchInput)) {
-                    html += allArticles[i].html;
-                    results++;
-                }
-            }
-
-            if (results > 0) {
-                experienceList.innerHTML = html;
-            } else {
-                experienceList.innerHTML = '<p class="no-results">No results found</p>';
-            }
-        }
-
-        function showAllExperiences() {
-            const experienceList = document.getElementById('experience-list');
-            let html = '';
-
-            allArticles.forEach(article => {
-                html += article.html;
-            });
-
-            if (html !== '') {
-                experienceList.innerHTML = html;
-            } else {
-                experienceList.innerHTML = '<p class="no-results">No article found</p>';
-            }
-        }
     </script>
 </body>
 </html>
