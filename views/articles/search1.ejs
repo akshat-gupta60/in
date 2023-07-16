@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .bg-greyish {
+            background-color: #c9c9c9;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: white !important;
+        }
+        .card-body {
+            padding: 1.5rem;
+            background-color: #ffffff;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .card-subtitle {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+        .card-text {
+            margin-bottom: 0.75rem;
+        }
+        .text-muted {
+            font-size: 0.875rem;
+        }
+        .d-flex.justify-content-center {
+            justify-content: center;
+        }
+        #about-section h2,
+        #contact-section h2 {
+            text-align: center;
+        }
+        .content {
+            flex: 1;
+        }
+        .footer {
+            position: relative;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #ac3b61;
+            color: #FFFFFF;
+            padding: 20px;
+            text-align: center;
+        }
+        .no-results {
+            text-align: center;
+            margin-top: 2rem;
+            font-weight: bold;
+        }
+        .journey-content-container{
+            white-space: pre-wrap;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+    
+    
+    
+    <div class="container">
+               <button class="btn btn-primary mb-4 mt-4" onclick="goBack()">Back</button>
+    </div>
+
+    <div class="container mt-4">
+        <h1 class="mb-4">Search Results</h1>
+
+        <div id="experience-list">
+            <% if (articles.length > 0) { %>
+                <% articles.forEach(article => { %>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= article.company_name %></h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Job Role: <%= article.job_role %></h6>
+                            <p class="card-text">
+                                <strong>Interview Experience: <%= article.candidate_name %></strong>
+                            </p>
+                            <p class="card-text">
+                                <strong>Preparation Strategies:</strong>
+                                <div class="journey-content-container"><%= article.strategy %></div>
+                            </p>
+                            <p class="card-text">
+                                <strong>Journey:</strong>
+                                <div class="journey-content-container"><%= article.journey %></div>
+                            </p>
+                            <p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="no-results">No results found</p>
+            <% } %>
+        </div>
+    </div>
+    
+    <%- include('../partials/footer') %>
+
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

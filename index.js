@@ -260,7 +260,7 @@ app.get('/search', (req, res) => {
   // Fetch articles from the database based on the search query
   Article.find({ company_name: { $regex: searchQuery, $options: 'i' } })
       .then(articles => {
-          res.render('articles/search', { articles });
+          res.render('articles/search1', { articles });
       })
       .catch(error => {
           console.log('Error:', error);
