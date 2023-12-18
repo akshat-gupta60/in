@@ -50,7 +50,7 @@ const articleSchema=new mongoose.Schema({
 
 
 
-//we will create a new collection   
+//we will create a new collection  
 
 
 

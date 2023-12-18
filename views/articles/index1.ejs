@@ -92,6 +92,23 @@
             font-family: 'Roboto', sans-serif;
             font-size: 1rem;
             margin: 0;
+        }
+        .read-more-button {
+            margin-top: 1rem;
+           
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 25px;
+            background-color: #007bff;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+            text-decoration: none; /* Remove default link underline */
+            transition: background-color 0.3s ease;
+        }
+        .read-more-button:hover {
+            background-color: #0056b3; /* Darker color on hover */
+        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,16 +120,19 @@
     <div class="container mt-4">
         <h1 class="mb-4">Interview Experiences</h1>
 
+
         <div class="search-form">
             <input type="text" class="form-control search-input" id="company-search" placeholder="Search by company name">
             <button class="btn btn-primary btn-l search-button" onclick="searchExperiences()">Search</button>
         </div>
 
-       
-        
+
         <div class="d-flex justify-content-center m-4">
             <a href="/articles/new" class="btn btn-success btn-lg add-experience-button">Add Your Experience</a>
         </div>
+
+
+
 
         <div id="experience-list">
             <% if (articles.length > 0) { %>
@@ -122,18 +142,10 @@
                             <h5 class="card-title"><%= article.company_name %></h5>
                             <h6 class="card-subtitle mb-2 text-muted">Job Role: <%= article.job_role %></h6>
                             <p class="card-text">
-                                <strong>Interview Experience: <%= article.candidate_name %></strong>
-                            </p>
-                            <p class="card-text">
-                                <strong>Preparation Strategies:</strong>
-                                <div class="journey-content-container"><%= article.strategy %></div>
-                            </p>
-                            <p class="card-text">
-                                <strong>Journey:</strong>
-                                
-                                <div class="journey-content-container"><%= article.journey %></div>
+                                <strong>Name: <%= article.candidate_name %></strong>
                             </p>
                             <p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p>
+                            <a href="/articles/<%= article._id %>" class="read-more-button">Read More</a>
                         </div>
                     </div>
                 <% }) %>
@@ -146,16 +158,13 @@
     <%- include('../partials/footer') %>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-       
 
 
 
- function searchExperiences() {
-    const searchInput = document.getElementById('company-search').value.toLowerCase();
-    window.location.href = '/login/search?query=' + encodeURIComponent(searchInput);
-}
-
-       
+        function searchExperiences() {
+            const searchInput = document.getElementById('company-search').value.toLowerCase();
+            window.location.href = '/search?query=' + encodeURIComponent(searchInput);
+        }
     </script>
 </body>
 </html>

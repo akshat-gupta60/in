@@ -70,7 +70,7 @@
     <%- include('../partials/navbar1') %>
     
     <div class="container mt-4">
-        <a href="/login/all-articles"> <button class="btn btn-primary mb-4 mt-4" >Back</button></a>
+        <a href="/all-articles"> <button class="btn btn-primary mb-4 mt-4" >Back</button></a>
         <h1 class="mb-4">Interview Experiences</h1>
         <% if (articles.length === 0) { %>
             <p>No Content found.</p>
@@ -81,11 +81,11 @@
                         <h5 class="card-title"><%= article.company_name%></h5>
                         <h6 class="card-subtitle mb-2 text-muted">Job Role: <%= article.job_role %></h6>
                         <p class="card-text">
-                            <strong>Interview Experience: <%= article.candidate_name %></strong>
+                            <strong>Name: <%= article.candidate_name %></strong>
                         </p>
                         <p class="card-text">
                             <strong>Preparation Strategies:</strong>
-                            <div class="journey-content-container"><%= article.journey %></div>
+                            <div class="journey-content-container"><%= article.strategy %></div>
                         </p>
                         <p class="card-text">
                             <strong>Journey:</strong>

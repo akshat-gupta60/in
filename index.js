@@ -5,14 +5,15 @@ const mongoose=require("mongoose");
 const { Article, User } = require("./models/article");
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const passport = require('passport');
 require('dotenv').config();
 const PORT=process.env.PORT || 5000;
-
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const methodOverride=require("method-override");
 
 const connectionString =
 
-
+//mongodb atlas connection establishment
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -22,11 +23,14 @@ mongoose.connect(process.env.MONGO_URL, {
   console.error('Error connecting to MongoDB Atlas:', error);
 });
 
+
 app.set('view engine', 'ejs');
 const path=require("path");
-console.log(path.join(__dirname,'/views'));
+//console.log(path.join(__dirname,'/views'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('partials', path.join(__dirname, 'partials'));
+
+
 app.use(express.urlencoded({extended:false}));
 app.use(methodOverride('_method'));
 
@@ -36,11 +40,70 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// Passport session setup.
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
+});
+
+// Use the GoogleStrategy within Passport.
+passport.use(
+  new GoogleStrategy(
+    
+    {
+      
+      clientID: '838552935960-fajimn760rg72dpfl34cd2dokvd37p61.apps.googleusercontent.com',
+      clientSecret: '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',
+      callbackURL: 'http://localhost:5000/auth/google/callback',
+      passReqToCallback: true, // Add this line to pass the req object to the callback
+      scope: ['profile', 'email'],
+    },
+    (req,token, tokenSecret, profile, done) => {
+      // Check if profile.emails is defined and not empty
+      if (profile.emails && profile.emails.length > 0) {
+        // Extract user's email from the profile
+        const userEmail = profile.emails[0].value;
+        const userProfilePic = profile.photos && profile.photos.length > 0
+        ? profile.photos[0].value
+        : null;
+
+        // Store the user's email in the session
+        req.session.userEmail = userEmail;
+        req.session.userProfilePic = userProfilePic; // Store profile picture URL
+        console.log(req.session.userProfilePic);
+        console.log(req.session.userEmail);
+
+      }
+      return done(null, profile);
+    }
+  )
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Routes for authentication.
+app.get(
+  '/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    // Successful authentication, redirect home.
+    res.redirect('/all-articles');
+  }
+);
 
 
 
 function authenticateUser(req, res, next) {
-  if (req.session.userEmail) {
+  if (req.user.emails[0].value) {
     next();
   } else {
     res.redirect('/login');
@@ -66,151 +129,57 @@ app.get("/login",(req,res)=>{
 }
 );
 
-app.post("/register", async (req, res) => {
-    try {
-      if (
-        req.body.name == "" ||
-        req.body.email == "" ||
-        req.body.phone == "" ||
-        req.body.password == "" ||
-        req.body.confpass == ""
-      ) {
-        res.render("articles/message");
-        return;
-      }
-  
-      const email = req.body.email;
-      const useremail = await User.findOne({ email: email });
-      if (useremail) {
-        res.render("articles/message2");
-        return;
-      }
-      
-      const password = req.body.password;
-      const cpassword = req.body.confpass;
-      if (password == cpassword) {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+
+app.post("/articles",async (req,res)=>{
+
+
+  const userEmail = req.user.emails[0].value;
+    let article= new Article({
+        company_name:req.body.company_name,
+        job_role:req.body.job_role,
+        candidate_name:req.body.candidate_name,
+        email:userEmail,
+        strategy:req.body.strategy,
+        journey:req.body.journey,
+
         
-        const registerEmployee = new User({
-          name: req.body.name,
-          email: req.body.email,
-          phone: req.body.phone,
-          password: hashedPassword,
-          confirmpassword: hashedPassword,
-        });
-        //hash the password
+    })
+    try{
+       article =await article.save();
+       res.redirect(`/articles/${article.id}`);
 
-        // const token=await registerEmployee.generateAuthToken();
-        // console.log(token);
-
-
-
-        // //cookie generate
-        // res.cookie("jwt",token,{
-        //   expires:new Date(Date.now()+30000),
-        //   httpOnly:true
-        // });
-
-
-        const registered = await registerEmployee.save();
-        res.render("articles/login");
-        
-      } else {
-        res.render("articles/new");
-        return;
-      }
-  
-      console.log(req.body.name);
-    } catch (e) {
-      res.send(e);
+    }catch(e){
+      console.log(e);
+        res.render("articles/new",{article:article});
     }
-  });
-
-
-//   app.post("/login",async(req,res)=>{
-//     try{
-//         const email=req.body.email;
-//         const password=req.body.password;
-//         const useremail=await User.findOne({email:email});
-//         //const isMatch=await bcrypt.compare(password,useremail.password);
-
-//         // const token=await useremail.generateAuthToken();
-//         // console.log(token);
-
-//         // res.cookie("jwt",token,{
-//         //   expires:new Date(Date.now()+50000),
-//         //   httpOnly:true,
-          
-
-//         // });
-//         // console.log();
-
-
-         
-//         if(useremail.password==password){
-//           req.session.userEmail = user.email; // Store the user's email in the session
-          
-//             const articles= await Article.find().sort({createdAt:'desc'});
-
-//     res.render('articles/index1',{article:articles});
-           
-//         }else{
-//             res.send("invalid login details");
-//         }
-//     }catch(e){
-//         res.status(400).send("invalid login details");
-//     }
-// }
-// );
-
-  
-app.post("/login", async (req, res) => {
-  try {
-    const email = req.body.email;
-    const password = req.body.password;
-    const useremail = await User.findOne({ email: email });
-
-    if (useremail) {
-      const passwordMatch = await bcrypt.compare(password, useremail.password);
-      if (passwordMatch) {
-      req.session.userEmail = useremail.email; // Store the user's email in the session
-      const articles = await Article.find().sort({ createdAt: 'desc' });
-      res.redirect('login/all-articles');
-      }
-      else {
-        res.send("Invalid login details");
-      }
      
 
-    } else {
-      res.send("Invalid login details");
-    }
-  }
-   catch (e) {
-    res.status(400).send("Invalid login details");
-  }
-});
 
 
-app.get('/login/all-articles', authenticateUser,async (req, res) => {
+        
+}
+);
+
+app.get('/all-articles', async (req, res) => {
   try {
     const articles = await Article.find().sort({ createdAt: 'desc' });
-    res.render('articles/index1.ejs', { articles : articles});
+   
+    res.render('articles/index1.ejs', { articles : articles ,ProfilePic: req.session.userProfilePic, userEmail: req.session.userEmail });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
 
-app.get('/login/my-articles', authenticateUser, async (req, res) => {
+app.get('/my-articles', authenticateUser, async (req, res) => {
   // if (!req.session.userEmail) {
   //   res.redirect('/login');
   //   return;
   // }
 
   try {
-     userEmail = req.session.userEmail;
+     userEmail = req.user.emails[0].value;;
     const articles = await Article.find({ email: userEmail }).sort({ createdAt: 'desc' });
     res.render('articles/myarticles', { articles: articles });
   } catch (error) {
@@ -220,11 +189,21 @@ app.get('/login/my-articles', authenticateUser, async (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
+  // Use req.logout() with a callback function
+  req.logout((err) => {
     if (err) {
-      console.log(err);
+      console.error('Error logging out:', err);
     }
-    res.redirect('/'); // Redirect the user to the login page after logout
+
+    // Optionally, you can also destroy the entire session
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error destroying session:', err);
+      } else {
+        // Redirect to the home page or any desired destination after logout
+        res.redirect('/');
+      }
+    });
   });
 });
 
@@ -240,7 +219,7 @@ app.get('/articles/edit/:id', authenticateUser, async (req, res) => {
 
 
 // Handle search request
-app.get('/login/search', (req, res) => {
+app.get('/search', (req, res) => {
   const searchQuery = req.query.query;
 
   // Fetch articles from the database based on the search query
