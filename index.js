@@ -55,9 +55,9 @@ passport.use(
     
     {
       
-      clientID: '838552935960-fajimn760rg72dpfl34cd2dokvd37p61.apps.googleusercontent.com',
-      clientSecret: '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',
-      callbackURL: 'http://localhost:5000/auth/google/callback',
+      clientID:process.env.CLIENT_ID ,
+      clientSecret:process.env.CLIENT_SECRET ,
+      callbackURL: 'https://interview-exp.onrender.com/auth/google/callback',
       passReqToCallback: true, // Add this line to pass the req object to the callback
       scope: ['profile', 'email'],
     },
