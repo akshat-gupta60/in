@@ -132,8 +132,7 @@
                             <p class="card-text">
 
                                 <strong>Name: <%= article.candidate_name %></strong>
-                                <strong>Interview Experience: <%= article.candidate_name %></strong>
-                            </p>
+                               
                    
                             <p class="card-text"><small class="text-muted">Posted on <%= article.createdAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></small></p>
                             <a href="/articles/show/<%= article._id %>" class="read-more-button">Read More</a>

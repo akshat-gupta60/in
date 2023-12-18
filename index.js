@@ -11,7 +11,7 @@ const PORT=process.env.PORT || 5000;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const methodOverride=require("method-override");
 
-const connectionString =
+
 
 //mongodb atlas connection establishment
 mongoose.connect(process.env.MONGO_URL, {
